@@ -1,5 +1,6 @@
 package com.dasare.estoque.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
@@ -9,8 +10,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TB-MANAGER")
-public class Manager {
+@Table(name = "TB_MANAGER")
+public class Manager implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
