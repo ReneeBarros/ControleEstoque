@@ -5,7 +5,7 @@ public enum OrderStatus {
 	
 	SOLICITADO,
 	PROCESSADO,
-	COMPRADO,
+	CARREGANDO,
 	ENVIADO,
-	
+	RECEBIDO
 }

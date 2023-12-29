@@ -2,10 +2,14 @@ package com.dasare.estoque.model;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 
 import com.dasare.estoque.model.enumm.OrderStatus;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,12 +18,13 @@ public class Order implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long orderID;
 	private Instant instant;
 	private OrderStatus orderStatus;
 
 	public Order() {
-		super();
 	}
 
 	public Order(Long orderID, Instant instant, OrderStatus orderStatus) {
@@ -27,6 +32,47 @@ public class Order implements Serializable {
 		this.orderID = orderID;
 		this.instant = instant;
 		this.orderStatus = orderStatus;
+	}
+
+	public Long getOrderID() {
+		return orderID;
+	}
+
+	public void setOrderID(Long orderID) {
+		this.orderID = orderID;
+	}
+
+	public Instant getInstant() {
+		return instant;
+	}
+
+	public void setInstant(Instant instant) {
+		this.instant = instant;
+	}
+
+	public OrderStatus getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(orderID);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Order other = (Order) obj;
+		return Objects.equals(orderID, other.orderID);
 	}
 	
 	

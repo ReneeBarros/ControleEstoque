@@ -1,0 +1,16 @@
+package com.dasare.estoque.model.enumm;
+
+public enum ProductStatus {
+	
+	MONTADO,
+	LINHA_DE_MONTAGEM,
+	PINTADO,
+	PARA_RECUPERACAO,
+	RECUPERADO,
+	SOLICITADO_COMPRA,
+	COMPRADO,
+	ESPERANDO_CHEGAR,
+	ESPERANDO_PAGAMENTO,
+	ENVIADO
+
+}
