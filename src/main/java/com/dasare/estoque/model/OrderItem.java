@@ -1,37 +1,36 @@
 package com.dasare.estoque.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
+import com.dasare.estoque.model.pk.OrderItemPk;
+
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="TB_ORDERITEM")
+@Table(name="TB_ORDER_ITEM")
 public class OrderItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-
-	private Double quant;
 	
-	private Order order;
+	@EmbeddedId
+	private OrderItemPk id = new OrderItemPk();
+	
+	private Double quant;
 
-	private List<Product>product = new ArrayList<>();
 
 	public OrderItem() {
 	}
+	
+	
+	public OrderItem( Product product,Order order,Double quant ) {
 
-	public OrderItem( Double quant, Order order, List<Product> product) {
-		super();
-
+		id.setOrder(order);
+		id.setProduct(product);
 		this.quant = quant;
-		this.order = order;
-		this.product = product;
+
 	}
 
 
@@ -43,18 +42,21 @@ public class OrderItem implements Serializable {
 		this.quant = quant;
 	}
 
+
 	public Order getOrder() {
-		return order;
+		return id.getOrder();
 	}
 
 	public void setOrder(Order order) {
-		this.order = order;
+		id.setOrder( order);
 	}
 	
-	public List<Product> getProduct() {
-		return product;
+	public Product getProduct() {
+		return id.getProduct();
 	}
 
-
+	public void setProduct(Product product) {
+		id.setProduct(product);;
+	}
 
 }
