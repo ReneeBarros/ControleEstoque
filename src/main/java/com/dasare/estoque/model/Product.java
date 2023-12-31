@@ -29,6 +29,7 @@ public class Product {
 	
 	public Product() {
 	}
+	
 	public Product(Long productID, String name, ProductStatus productStatus, Category category) {
 		super();
 		this.productID = productID;

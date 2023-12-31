@@ -24,17 +24,17 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long orderID;
-	private Instant instant;
+	private Instant instant = Instant.now();
 	private OrderStatus orderStatus;
 	
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
+	
 
 	public Order() {
 	}
 
 	public Order(Long orderID, Instant instant, OrderStatus orderStatus) {
-		super();
 		this.orderID = orderID;
 		this.instant = instant;
 		this.orderStatus = orderStatus;

@@ -3,10 +3,10 @@ package com.dasare.estoque.model;
 import java.io.Serializable;
 
 import com.dasare.estoque.model.pk.OrderItemPk;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -42,7 +42,7 @@ public class OrderItem implements Serializable {
 		this.quant = quant;
 	}
 
-
+	@JsonIgnore
 	public Order getOrder() {
 		return id.getOrder();
 	}
