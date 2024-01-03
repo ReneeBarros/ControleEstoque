@@ -13,7 +13,6 @@ public class ClientService {
 	ClientRepository clientRepository;
 
 	private final void ClientRepository(ClientRepository clientRepository) {
-
 		this.clientRepository = clientRepository;
 	}
 
