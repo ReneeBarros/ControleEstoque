@@ -14,6 +14,8 @@ import com.dasare.estoque.model.Client;
 import com.dasare.estoque.record.reponse.ClientRecordResponse;
 import com.dasare.estoque.service.execption.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ClientService {
 
@@ -25,16 +27,16 @@ public class ClientService {
 		clientAux.setName(client.getName());
 		clientAux.setEnderco(client.getEnderco());
 		clientAux.setManager(client.getManager());
-		
+
 		return clientRepository.save(clientAux);
 	}
 
 	public ClientRecordResponse findByID(Long id) {
-		
+
 		Optional<Client> client;
 		var clientResponse = new ClientDTOmapper();
 		client = clientRepository.findById(id);
-		return clientResponse.ClientResponse(client.orElseThrow(()-> new ResourceNotFoundException(id)));
+		return clientResponse.ClientResponse(client.orElseThrow(() -> new ResourceNotFoundException(id)));
 
 	}
 
@@ -53,33 +55,43 @@ public class ClientService {
 	public List<ClientRecordResponse> getAllClient() {
 		var clientAux = new ClientDTOmapper();
 
-		List<Client> client = new ArrayList<>();
-		List<ClientRecordResponse> clientResponse = new ArrayList<>();
-		client = clientRepository.findAll();
-		for (Client c : client) {
-			clientResponse.add(clientAux.ClientResponse(c));
+		try {
+			List<Client> client = new ArrayList<>();
+			List<ClientRecordResponse> clientResponse = new ArrayList<>();
+			client = clientRepository.findAll();
+
+			for (Client c : client) {
+				clientResponse.add(clientAux.ClientResponse(c));
+			}
+			return clientResponse;
+		} catch (ResourceNotFoundException e) {
+			e.getMessage();
 		}
-		return clientResponse;
+		return null;
 	}
 
 	public void upDateClient(Client client) {
+		
+		try {
 		var cAux = new Client();
 		cAux = clientRepository.getReferenceById(client.getClientID());
 
 		cAux.setName(client.getName());
 		cAux.setEnderco(client.getEnderco());
 		clientRepository.save(client);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(client.getClientID());
+		}
 	}
 
 	public void deleteClient(Long id) {
 		try {
-		var client = new Client();
-		client = clientRepository.getReferenceById(id);
-		clientRepository.deleteById(id);
-		}
-		catch (EmptyResultDataAccessException e) {
+			var client = new Client();
+			client = clientRepository.getReferenceById(id);
+			clientRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
-		}catch(RuntimeException e) {
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 		}
 	}
