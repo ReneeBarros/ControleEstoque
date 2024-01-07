@@ -1,58 +1,86 @@
 package com.dasare.estoque.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.dasare.estoque.DTOmapper.ClientDTOmapper;
 import com.dasare.estoque.Repository.ClientRepository;
 import com.dasare.estoque.model.Client;
+import com.dasare.estoque.record.reponse.ClientRecordResponse;
+import com.dasare.estoque.service.execption.ResourceNotFoundException;
 
 @Service
 public class ClientService {
 
+	@Autowired
 	ClientRepository clientRepository;
 
-	private final void ClientRepository(ClientRepository clientRepository) {
-		this.clientRepository = clientRepository;
-	}
-
 	public Client saveClient(Client client) {
-		return clientRepository.save(client);
+		var clientAux = new Client();
+		clientAux.setName(client.getName());
+		clientAux.setEnderco(client.getEnderco());
+		clientAux.setManager(client.getManager());
+		
+		return clientRepository.save(clientAux);
 	}
 
-	public Optional<Client> findById(Long id) {
+	public ClientRecordResponse findByID(Long id) {
+		
 		Optional<Client> client;
-		if (id == null) {
-			throw new IllegalArgumentException();
-		}
+		var clientResponse = new ClientDTOmapper();
 		client = clientRepository.findById(id);
-		if (client.isEmpty()) {
-			throw new IllegalArgumentException();
-		}
-		return client;
-	}
-	
-	public Client findByName (String name) {
-		return clientRepository.findByName(name);
+		return clientResponse.ClientResponse(client.orElseThrow(()-> new ResourceNotFoundException(id)));
+
 	}
 
-	public Client upDateClient(Long id, Client client) {
-		Optional<Client> c1;
+	public List<ClientRecordResponse> getByName(String name) {
+		var clientAux = new ClientDTOmapper();
+
+		List<Client> client = new ArrayList<>();
+		List<ClientRecordResponse> clientResponse = new ArrayList<>();
+		client = clientRepository.findByName(name);
+		for (Client c : client) {
+			clientResponse.add(clientAux.ClientResponse(c));
+		}
+		return clientResponse;
+	}
+
+	public List<ClientRecordResponse> getAllClient() {
+		var clientAux = new ClientDTOmapper();
+
+		List<Client> client = new ArrayList<>();
+		List<ClientRecordResponse> clientResponse = new ArrayList<>();
+		client = clientRepository.findAll();
+		for (Client c : client) {
+			clientResponse.add(clientAux.ClientResponse(c));
+		}
+		return clientResponse;
+	}
+
+	public void upDateClient(Client client) {
 		var cAux = new Client();
-		c1 = findById(id);
-		upDate(cAux, c1);
-		return clientRepository.saveAndFlush(cAux);
+		cAux = clientRepository.getReferenceById(client.getClientID());
+
+		cAux.setName(client.getName());
+		cAux.setEnderco(client.getEnderco());
+		clientRepository.save(client);
 	}
 
-	private void upDate(Client cAux, Optional<Client> c1) {
-		cAux.setName(c1.get().getName());
-		cAux.setEnderco(c1.get().getEnderco());
-	}
-	
 	public void deleteClient(Long id) {
-		if (id == null) {
-			throw new IllegalArgumentException();
-		}
+		try {
+		var client = new Client();
+		client = clientRepository.getReferenceById(id);
 		clientRepository.deleteById(id);
+		}
+		catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		}catch(RuntimeException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,11 +1,22 @@
 package com.dasare.estoque.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKey;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,17 +28,28 @@ public class Client implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long clientID;
+	
 	private String name;
-	private String enderco;
+	private String endereco;
+	
+
+	@JsonIgnore
+	@OneToMany(mappedBy = "client" ,cascade = CascadeType.ALL)
+	private List<Order> order = new ArrayList<>();
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinColumn(name = "managerid")
+	private Manager manager;
+
 	
 	public Client() {
 	}
 	
 	public Client(Long clientID, String name, String enderco) {
-		super();
-		this.clientID = clientID;
 		this.name = name;
-		this.enderco = enderco;
+		this.endereco = enderco;
+		this.clientID = clientID;
+		
 	}
 
 	public Long getClientID() {
@@ -47,11 +69,19 @@ public class Client implements Serializable {
 	}
 
 	public String getEnderco() {
-		return enderco;
+		return endereco;
 	}
 
 	public void setEnderco(String enderco) {
-		this.enderco = enderco;
+		this.endereco = enderco;
+	}
+
+	public Manager getManager() {
+		return manager;
+	}
+
+	public void setManager(Manager manager) {
+		this.manager = manager;
 	}
 
 	@Override

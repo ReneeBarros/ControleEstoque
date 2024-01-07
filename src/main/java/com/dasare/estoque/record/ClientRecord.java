@@ -1,5 +1,7 @@
 package com.dasare.estoque.record;
 
-public record ClientRecord(Long clientID,String name,String enderco) {
+import com.dasare.estoque.model.Manager;
+
+public record ClientRecord(Long clientID,String name,String enderco, Manager manager) {
 
 }

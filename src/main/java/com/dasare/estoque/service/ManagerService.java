@@ -1,20 +1,23 @@
 package com.dasare.estoque.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dasare.estoque.DTOmapper.ClientDTOmapper;
 import com.dasare.estoque.Repository.ManagerRepository;
+import com.dasare.estoque.model.Client;
 import com.dasare.estoque.model.Manager;
+import com.dasare.estoque.record.reponse.ClientRecordResponse;
 
 @Service
 public class ManagerService {
-
+	
+	@Autowired
 	ManagerRepository managerRepository;
-
-	private final void ManagerRepository(ManagerRepository managerRepository) {
-		this.managerRepository = managerRepository;
-	}
 
 	public Manager saveManager(Manager manager) {
 		return managerRepository.save(manager);
@@ -35,19 +38,21 @@ public class ManagerService {
 	public Manager findByName(String name) {
 		return managerRepository.findByName(name);
 	}
-
-	public Manager upDateManager(Long id, Manager manager) {
+	
+	public List<Manager> getAllManager() {
+		return managerRepository.findAll();
+	}
+	
+	public Manager upDateManager( Manager manager) {
 		Optional<Manager> m1;
-		var managerAux = new Manager();
-		m1 = findById(id);
-		upDate(managerAux, m1);
-		return managerRepository.saveAndFlush(managerAux);
+		m1 = findById(manager.getManagerID());
+		m1.get().setName(manager.getName());
+		m1.get().setEmail(manager.getEmail());
+
+		return managerRepository.save(m1.get());
 	}
 
-	private void upDate(Manager managerAux, Optional<Manager> m1) {
-		managerAux.setName(m1.get().getName());
-		managerAux.setEmail(m1.get().getEmail());
-	}
+
 
 	public void deleteManager(Long id) {
 		if (id == null) {
