@@ -71,7 +71,6 @@ public class ClientService {
 	}
 
 	public void upDateClient(Client client) {
-		
 		try {
 		var cAux = new Client();
 		cAux = clientRepository.getReferenceById(client.getClientID());

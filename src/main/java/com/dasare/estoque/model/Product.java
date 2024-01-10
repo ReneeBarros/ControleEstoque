@@ -1,8 +1,11 @@
 package com.dasare.estoque.model;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.dasare.estoque.model.enumm.ProductStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -26,6 +30,9 @@ public class Product {
 	@ManyToOne (cascade = CascadeType.ALL)
 	@JoinColumn(name = "CAtegory_ID")
 	private Category category;
+	
+	@OneToMany(mappedBy = "id.product")
+	private Set<OrderItem> items = new HashSet<>();
 	
 	public Product() {
 	}
@@ -62,6 +69,16 @@ public class Product {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
+	
+	@JsonIgnore
+	public Set<Order> getOrders(){
+		Set<Order> set = new HashSet<>();
+		for (OrderItem x : items) {
+			set.add(x.getOrder());
+		}
+		return set;
+	}
+	
 	@Override
 	public int hashCode() {
 		return Objects.hash(name, productID);

@@ -9,6 +9,7 @@ import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+
 @Entity
 @Table(name="TB_ORDER_ITEM")
 public class OrderItem implements Serializable {
@@ -21,15 +22,12 @@ public class OrderItem implements Serializable {
 	private Double quant;
 
 
-	public OrderItem() {
-	}
-	
-	
-	public OrderItem( Product product,Order order,Double quant ) {
-
+	public OrderItem(Product product,Order order,Double quant ) {
+		super();
+		this.quant = quant;
 		id.setOrder(order);
 		id.setProduct(product);
-		this.quant = quant;
+		
 
 	}
 
@@ -51,6 +49,7 @@ public class OrderItem implements Serializable {
 		id.setOrder( order);
 	}
 	
+
 	public Product getProduct() {
 		return id.getProduct();
 	}
